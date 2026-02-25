@@ -309,29 +309,13 @@
         }
 
         function goToSurvey() {
-            showScreen('survey-screen');
-            const container = document.getElementById('questions-container');
-            const qs = [
-                { id: 'trust', label: 'How likely are you to trust this site?' },
-                { id: 'understand_collect', label: 'How well do you understand what this site collects of you?' },
-                { id: 'understand_use', label: 'How well do you understand how your data is used or stored?' },
-                { id: 'use_intent', label: 'How likely are you to use this site?' }
-            ];
-
-            container.innerHTML = qs.map(q => `
-                <div class="question-box">
-                    <label class="question-label">${q.label}</label>
-                    <div class="rating-row">
-                        ${[1, 2, 3, 4, 5].map(n => `
-                            <button class="rating-btn" onclick="setRate('${q.id}', ${n}, this)">${n}</button>
-                        `).join('')}
-                    </div>
-                    <div class="scale-text">
-                        <span>Not at all</span>
-                        <span>Very much / Extremely</span>
-                    </div>
-                </div>
-            `).join('');
+            if (currentVariant === 'jargon') {
+                // Redirect to the Long Policy Form
+                window.location.href = "https://forms.gle/rVNmnDm3ACHt1fY8A";
+            } else {
+                // Redirect to the Short Policy Form
+                window.location.href = "https://forms.gle/jvHKmMqy4y9936yb6";
+            }
         }
 
         function setRate(id, val, btn) {
