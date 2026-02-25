@@ -128,8 +128,6 @@
     <!-- SCREEN 2: LOADING -->
     <div id="loading-screen">
         <div class="spinner"></div>
-        <h2 id="loading-text" style="font-weight: 800; font-size: 1.8rem;">Randomizing privacy policy presented...</h2>
-        <p style="color: #64748b; font-size: 1.1rem;">This ensures unbiased research data collection.</p>
     </div>
 
     <!-- SCREEN 3: POLICY MODAL -->
@@ -190,7 +188,7 @@
             setTimeout(() => {
                 renderPolicy();
                 showScreen('policy-screen');
-            }, 3000); // 3 second delay for "randomizing" effect
+            }, 1500); // 1.5 second delay for "loading" effect
         }
 
         function generateMassiveJargon() {
