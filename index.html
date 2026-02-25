@@ -91,6 +91,31 @@
 
         .hidden { display: none !important; }
         .flex { display: flex !important; }
+
+        /* Additional Landing Page Sections */
+        .section-title { text-align: center; font-size: 2.5rem; color: #1e3a8a; margin: 60px 0 20px; font-weight: 800; }
+        .how-it-works { display: flex; justify-content: space-around; text-align: center; gap: 20px; margin: 40px 0 80px; flex-wrap: wrap; }
+        .step { flex: 1; min-width: 250px; padding: 20px; }
+        .step-number { background: var(--primary); color: white; width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: bold; margin: 0 auto 20px; }
+        .step h4 { font-size: 1.3rem; color: #1e3a8a; margin-bottom: 10px; }
+        .step p { color: var(--gray); font-size: 1rem; }
+        
+        .testimonials { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-bottom: 100px; }
+        .testimonial-card { padding: 35px; background: white; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05); }
+        .testimonial-text { font-style: italic; color: #4b5563; margin-bottom: 20px; font-size: 1.1rem; line-height: 1.6; }
+        .testimonial-author { font-weight: 700; color: #1e3a8a; font-size: 1.1rem; }
+        .testimonial-major { font-size: 0.9rem; color: var(--gray); }
+
+        .cta-bottom { text-align: center; padding: 80px 20px; background: var(--primary); color: white; border-radius: 40px; margin-bottom: 40px; }
+        .cta-bottom h2 { font-size: 3rem; margin-top: 0; margin-bottom: 20px; font-weight: 800; }
+        .cta-bottom p { font-size: 1.3rem; margin-bottom: 40px; opacity: 0.9; }
+        .btn-white { background: white; color: var(--primary); }
+        .btn-white:hover { background: #f8fafc; transform: translateY(-2px); }
+
+        .footer { padding: 40px 20px; border-top: 1px solid var(--border); text-align: center; color: var(--gray); font-size: 0.95rem; margin-top: 40px; }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; flex-wrap: wrap; }
+        .footer-links a { color: var(--gray); text-decoration: none; font-weight: 500; transition: color 0.2s; }
+        .footer-links a:hover { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -123,6 +148,60 @@
                 <p>Supported by the Flyer Student Union. No hidden fees, subscriptions, or credit cards.</p>
             </div>
         </div>
+
+        <h2 class="section-title">How It Works</h2>
+        <div class="how-it-works">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h4>Create an Account</h4>
+                <p>Sign up in seconds using your student email. No credit card required.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h4>Search for Books</h4>
+                <p>Find the exact ISBN or course code you need for this semester's classes.</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h4>Meet & Swap</h4>
+                <p>Message the owner safely on our platform and meet on campus to get your book.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">What Students Say</h2>
+        <div class="testimonials">
+            <div class="testimonial-card">
+                <p class="testimonial-text">"I saved over $400 this semester alone. I found both of my biology textbooks in perfect condition within 10 minutes of signing up!"</p>
+                <div class="testimonial-author">Sarah Jenkins</div>
+                <div class="testimonial-major">Biology, Junior</div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"The best part is that I don't have to deal with shipping delays. I messaged a guy in my dorm and had the book an hour later."</p>
+                <div class="testimonial-author">David Chen</div>
+                <div class="testimonial-major">Computer Science, Sophomore</div>
+            </div>
+            <div class="testimonial-card">
+                <p class="testimonial-text">"Finally, a service that actually helps students instead of trying to profit off of us. The platform is super easy to use."</p>
+                <div class="testimonial-author">Elena Rodriguez</div>
+                <div class="testimonial-major">Business Admin, Senior</div>
+            </div>
+        </div>
+
+        <div class="cta-bottom">
+            <h2>Ready to stop overpaying?</h2>
+            <p>Join the thousands of students already using FlyersBookExchange.</p>
+            <button class="btn btn-white" style="padding: 18px 45px; font-size: 1.3rem; border-radius: 15px; font-weight: bold; border: none; cursor: pointer;" onclick="startSignUp()">Create Your Free Account</button>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-links">
+                <a href="#" onclick="startSignUp()">About Us</a>
+                <a href="#" onclick="startSignUp()">FAQ</a>
+                <a href="#" onclick="startSignUp()">Contact Support</a>
+                <a href="#" onclick="startSignUp()">Privacy & Terms</a>
+            </div>
+            <div>&copy; 2026 FlyersBookExchange. Built by students, for students at Flyer University.</div>
+        </footer>
     </div>
 
     <!-- SCREEN 2: LOADING -->
