@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlyersBookExchange - Privacy Research Study</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --bg: #ffffff;
+            --text: #1f2937;
+            --gray-light: #f3f4f6;
+            --gray: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text);
+            background-color: var(--bg);
+            line-height: 1.6;
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        
+        /* Navigation */
+        nav { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid var(--border); }
+        .logo { font-size: 1.6rem; font-weight: 800; color: var(--primary); letter-spacing: -0.025em; }
+        .btn { padding: 12px 24px; border-radius: 10px; border: none; cursor: pointer; font-weight: 600; transition: all 0.2s ease; font-size: 0.95rem; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-1px); }
+        .btn-outline { background: transparent; border: 1.5px solid var(--border); color: #4b5563; }
+        .btn-outline:hover { background: #f9fafb; border-color: #d1d5db; }
+
+        /* Landing Page Content */
+        .hero { text-align: center; padding: 100px 20px; background: radial-gradient(circle at top, #eff6ff 0%, #ffffff 100%); border-radius: 40px; margin: 20px 0; }
+        .hero h1 { font-size: 4rem; margin-bottom: 24px; color: #1e3a8a; line-height: 1.1; font-weight: 900; }
+        .hero p { font-size: 1.4rem; color: var(--gray); max-width: 800px; margin: 0 auto 48px; }
+        
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin: 80px 0; }
+        .feature-box { padding: 40px; border-radius: 24px; background: #f8fafc; border: 1px solid var(--border); text-align: left; }
+        .feature-box h3 { font-size: 1.5rem; margin-top: 0; color: #1e3a8a; }
+
+        /* Loading Screen */
+        #loading-screen { display: none; height: 100vh; flex-direction: column; justify-content: center; align-items: center; background: white; z-index: 2000; position: fixed; width: 100%; top: 0; }
+        .spinner { border: 5px solid #f3f3f3; border-top: 5px solid var(--primary); border-radius: 50%; width: 60px; height: 60px; animation: spin 1s linear infinite; margin-bottom: 24px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Privacy Modal Styles */
+        #policy-screen { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1500; }
+        .modal { background: white; width: 95%; max-width: 800px; height: 85vh; border-radius: 24px; overflow: hidden; display: flex; flex-direction: column; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); }
+        .modal-header { padding: 25px 40px; border-bottom: 1px solid var(--border); background: #fcfcfc; display: flex; justify-content: space-between; align-items: center; }
+        .modal-content { padding: 40px; overflow-y: auto; text-align: left; flex-grow: 1; scroll-behavior: smooth; }
+        .modal-footer { padding: 25px 40px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 16px; background: #f8fafc; }
+
+        /* Jargon (Bad) Policy Styles */
+        .jargon-policy { font-family: "Times New Roman", serif; color: #222; font-size: 0.9rem; line-height: 1.4; }
+        .jargon-policy h4 { text-transform: uppercase; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 25px; }
+        .jargon-policy p { margin-bottom: 15px; text-align: justify; }
+
+        /* Optimized (Good) Policy Styles */
+        .optimized-policy { color: #334155; }
+        .optimized-policy h2 { color: #1e293b; font-size: 1.8rem; margin-top: 0; }
+        .section-icon { background: #eff6ff; padding: 20px; border-radius: 16px; margin-bottom: 25px; border-left: 4px solid var(--primary); }
+        
+        /* Privacy Nutrition Label */
+        .nutrition-label { border: 3px solid black; padding: 20px; font-family: "Helvetica Neue", sans-serif; margin-bottom: 30px; background: white; color: black; }
+        .nl-title { font-size: 2.2rem; font-weight: 900; border-bottom: 12px solid black; line-height: 1; padding-bottom: 5px; margin: 0; }
+        .nl-sub { font-size: 0.9rem; font-weight: bold; border-bottom: 1px solid black; padding: 5px 0; margin-bottom: 10px; }
+        .nl-section { border-bottom: 6px solid black; padding: 10px 0; }
+        .nl-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 1.1rem; border-bottom: 1px solid #eee; }
+        .nl-row-indent { padding-left: 20px; font-size: 1rem; border-bottom: 1px solid #f0f0f0; }
+        .nl-bold { font-weight: 900; }
+        .val-yes { color: #059669; font-weight: bold; }
+        .val-no { color: #dc2626; font-weight: bold; }
+
+        /* Survey Screen */
+        #survey-screen { display: none; min-height: 100vh; background: #f1f5f9; justify-content: center; align-items: center; padding: 40px 20px; }
+        .survey-card { background: white; padding: 50px; border-radius: 32px; width: 100%; max-width: 600px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .survey-card h2 { font-size: 2rem; margin-top: 0; color: #1e293b; }
+        .question-box { margin-bottom: 35px; }
+        .question-label { font-weight: 700; font-size: 1.1rem; color: #334155; margin-bottom: 15px; display: block; }
+        .rating-row { display: flex; justify-content: space-between; gap: 10px; }
+        .rating-btn { flex: 1; aspect-ratio: 1; border-radius: 12px; border: 2px solid var(--border); background: white; font-size: 1.2rem; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .rating-btn:hover { border-color: var(--primary); color: var(--primary); background: #eff6ff; }
+        .rating-btn.active { background: var(--primary); color: white; border-color: var(--primary); transform: scale(1.05); }
+        .scale-text { display: flex; justify-content: space-between; font-size: 0.85rem; color: #94a3b8; margin-top: 8px; font-weight: 500; }
+
+        .hidden { display: none !important; }
+        .flex { display: flex !important; }
+    </style>
+</head>
+<body>
+
+    <!-- SCREEN 1: LANDING PAGE -->
+    <div id="landing-screen" class="container">
+        <nav>
+            <div class="logo">FlyersBookExchange</div>
+            <div>
+                <button class="btn btn-outline" style="margin-right:8px;">Sign In</button>
+                <button class="btn btn-primary" onclick="startSignUp()">Create Free Account</button>
+            </div>
+        </nav>
+        <div class="hero">
+            <h1>Free Books for Every Student.</h1>
+            <p>Join the 12,000+ Flyer University students sharing knowledge. Stop paying for access and start learning for free.</p>
+            <button class="btn btn-primary" style="padding: 20px 45px; font-size: 1.3rem; border-radius:15px;" onclick="startSignUp()">Join the Exchange Today</button>
+        </div>
+        <div class="features">
+            <div class="feature-box">
+                <h3>📚 Massive Library</h3>
+                <p>Access over 25,000 physical and digital textbooks across all major departments.</p>
+            </div>
+            <div class="feature-box">
+                <h3>🤝 Peer-to-Peer</h3>
+                <p>Direct exchanges with students who have taken your exact classes before.</p>
+            </div>
+            <div class="feature-box">
+                <h3>✨ 100% Free</h3>
+                <p>Supported by the Flyer Student Union. No hidden fees, subscriptions, or credit cards.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 2: LOADING -->
+    <div id="loading-screen">
+        <div class="spinner"></div>
+        <h2 id="loading-text" style="font-weight: 800; font-size: 1.8rem;">Randomizing privacy policy presented...</h2>
+        <p style="color: #64748b; font-size: 1.1rem;">This ensures unbiased research data collection.</p>
+    </div>
+
+    <!-- SCREEN 3: POLICY MODAL -->
+    <div id="policy-screen">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title-text" style="margin:0; font-size:1.4rem;">Privacy Agreement</h3>
+                <span id="policy-meta" style="font-size: 0.9rem; color: #64748b; font-weight: 500;"></span>
+            </div>
+            <div id="policy-body" class="modal-content">
+                <!-- Content injected via JS -->
+            </div>
+            <div class="modal-footer">
+                <button id="decline-btn" class="btn btn-outline" onclick="goToSurvey()">Decline</button>
+                <button id="accept-btn" class="btn btn-primary" onclick="goToSurvey()">Accept & Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCREEN 4: SURVEY -->
+    <div id="survey-screen">
+        <div class="survey-card">
+            <h2>Research Feedback</h2>
+            <p style="color: #64748b; margin-bottom: 40px;">Thank you for your interest! Before you proceed, please answer these 4 questions based on the privacy policy you were just shown.</p>
+            
+            <div id="questions-container"></div>
+
+            <button id="submit-btn" class="btn btn-primary" style="width:100%; margin-top:20px; padding:18px; font-size:1.1rem; opacity:0.5; cursor:not-allowed;" disabled onclick="finish()">Complete Study</button>
+        </div>
+    </div>
+
+    <!-- SCREEN 5: THANKS -->
+    <div id="thanks-screen" class="hidden" style="text-align:center; padding:120px 20px; background:white; height:100vh;">
+        <div style="font-size: 5rem; margin-bottom: 20px;">🎉</div>
+        <h1 style="font-size: 3.5rem; color: #1e3a8a; margin-top:0;">Contribution Recorded</h1>
+        <p style="font-size: 1.3rem; color: #64748b; max-width:600px; margin: 0 auto 40px;">Your responses have been securely logged. This data is critical for our research on privacy transparency in the digital age.</p>
+        <button class="btn btn-primary" onclick="location.reload()" style="padding: 15px 40px;">Restart Simulation</button>
+    </div>
+
+    <script>
+        let currentVariant = '';
+        const surveyAnswers = {};
+
+        function showScreen(id) {
+            ['landing-screen', 'loading-screen', 'policy-screen', 'survey-screen', 'thanks-screen'].forEach(s => {
+                document.getElementById(s).classList.remove('flex');
+                document.getElementById(s).classList.add('hidden');
+            });
+            const el = document.getElementById(id);
+            el.classList.remove('hidden');
+            if (['loading-screen', 'policy-screen', 'survey-screen'].includes(id)) el.classList.add('flex');
+        }
+
+        function startSignUp() {
+            showScreen('loading-screen');
+            currentVariant = Math.random() > 0.5 ? 'optimized' : 'jargon';
+            
+            setTimeout(() => {
+                renderPolicy();
+                showScreen('policy-screen');
+            }, 3000); // 3 second delay for "randomizing" effect
+        }
+
+        function generateMassiveJargon() {
+            const fragments = [
+                "The Platform, in its sole and absolute discretion, reserves the non-revocable, perpetual, worldwide, and sub-licensable right to aggregate, harvest, intercept, and archive all forms of telemetry.",
+                "By engaging with the ecosystem, the User hereby grants an irrevocable waiver of all rights pertaining to data privacy as defined under international statutes, including but not limited to GDPR, CCPA, and the Cayman Islands Data Protection Act.",
+                "Third-party dissemination of semi-anonymized data packets may occur without prior notification, judicial oversight, or administrative review, facilitating complex data arbitrage through strategic affiliates.",
+                "Users acknowledge that 'anonymization' is a probabilistic state and that the Platform makes no warranty regarding the structural integrity of data silos against cross-dataset triangulation.",
+                "Indemnification of the Platform by the User is mandatory for all legal costs arising from unauthorized infrastructure access, regardless of whether such access was facilitated by negligence on the part of the Platform.",
+                "Cross-origin resource sharing (CORS) may be utilized to sync textbook interests with broader student consumer profiles for the sake of platform optimization and behavioral synchronization.",
+                "The Platform reserves the right to employ 'Zombie Cookies' and HTML5 local storage artifacts that may recreate deleted identifiers to ensure session continuity and security auditing."
+            ];
+            
+            let content = '<div class="jargon-policy"><p><strong>LEGAL NOTICE:</strong> BY ENGAGING WITH THE FLYERSBOOKEXCHANGE ECOSYSTEM (HEREINAFTER REFERRED TO AS "THE PLATFORM"), YOU, THE REGISTERED OR UNREGISTERED ENTITY ("USER"), ACKNOWLEDGE AND AFFIRM A BINDING LEGAL OBLIGATION TO ADHERE TO THE FOLLOWING STIPULATIONS AND COVENANTS GOVERNING PRIVACY, DATA HARVESTING, AND INTELLECTUAL PROPERTY RECLAMATION.</p>';
+
+            content += '<h4>SECTION 1: EXTENSIVE TELEMETRY AND BIOMETRIC ACQUISITION PROTOCOLS</h4>';
+            content += '<p>The Platform employs an exhaustive, multi-layered telemetry acquisition framework designed to continuously monitor, log, and analyze User interactions. This includes, but is not limited to, the real-time interception of IPv4/IPv6 headers, highly granular geolocation coordinates (accurate to within a 5-meter radius), persistent device fingerprinting, and Media Access Control (MAC) address logging. Furthermore, by initiating a session, the User implicitly consents to the silent recording of cursor trajectories, keystroke dynamics, and localized browser cache entropy. These data points are perpetually stored within geographically distributed servers and are classified as critical operational assets. User attempts to obfuscate such telemetry via Virtual Private Networks (VPNs) or proxy configurations may be perceived as a violation of our Acceptable Use Policy and could result in immediate account termination.</p>';
+
+            content += '<h4>SECTION 2: THIRD-PARTY DATA ARBITRAGE AND INDEMNIFICATION WAIVER</h4>';
+            content += '<p>All metadata, query inputs, and behavioral patterns harvested by the Platform are subject to uninhibited monetization, licensing, and dissemination through our network of undisclosed data brokers, strategic advertising affiliates, and international analytics consortiums. The User acknowledges that this "Data Arbitrage" is fundamental to the Service’s financial model. Should any of these third-party entities suffer a security breach resulting in the exposure of User data, the User agrees to fully indemnify and hold harmless the Platform, its parent companies, and its subsidiaries from any and all legal, financial, or reputational damages. The User expressly waives any right to litigate, initiate class-action proceedings, or seek compensatory damages in the event of unauthorized exfiltration of their Personally Identifiable Information (PII) from third-party data silos.</p>';
+
+            let charCount = content.length;
+            let section = 3;
+            
+            while (charCount < 40000) {
+                const title = `SECTION ${section}.00${section} - DATA ADDENDUM ${Math.floor(Math.random() * 9999)}/X`;
+                const body = fragments[section % fragments.length].repeat(5);
+                const block = `<h4>${title}</h4><p>${body}</p><p>Ref Clause ${section}.B: User consents to the persistent storage of ${['MAC addresses', 'kernel headers', 'biometric hashes', 'browser entropy'][section % 4]} for 99+ years.</p>`;
+                content += block;
+                charCount += block.length;
+                section++;
+            }
+            content += '<p>Continued use of the service constitutes acceptance of these terms. These terms are subject to change without notice. Users are encouraged to check this document daily for modifications.</p></div>';
+            return { html: content, length: charCount };
+        }
+
+        function renderPolicy() {
+            const body = document.getElementById('policy-body');
+            const title = document.getElementById('modal-title-text');
+            const meta = document.getElementById('policy-meta');
+            const declineBtn = document.getElementById('decline-btn');
+            const acceptBtn = document.getElementById('accept-btn');
+
+            if (currentVariant === 'jargon') {
+                const jargon = generateMassiveJargon();
+                title.innerText = "Master Privacy & Data Processing Agreement v9.04";
+                meta.innerText = "";
+                body.innerHTML = jargon.html;
+                
+                // Dark Pattern: Unequal buttons
+                declineBtn.className = 'btn btn-outline';
+                acceptBtn.className = 'btn btn-primary';
+                declineBtn.style.flex = 'none';
+                acceptBtn.style.flex = 'none';
+                declineBtn.innerText = 'Decline';
+                acceptBtn.innerText = 'Accept & Create Account';
+            } else {
+                title.innerText = "Our Privacy Commitment to You";
+                
+                // Good Pattern: Equal buttons
+                declineBtn.className = 'btn btn-outline';
+                acceptBtn.className = 'btn btn-outline';
+                declineBtn.style.flex = '1';
+                acceptBtn.style.flex = '1';
+                declineBtn.innerText = 'Decline';
+                acceptBtn.innerText = 'Accept';
+
+                const goodHtml = `
+                    <div class="optimized-policy">
+                        <div class="section-icon">
+                            <strong>👋 The Short Version:</strong> We only collect what we need to connect you with free books. We don't sell your data, and you can delete everything you've shared with us at any time.
+                        </div>
+
+                        <div class="nutrition-label">
+                            <h1 class="nl-title">Data Facts</h1>
+                            <div class="nl-sub">Standard Privacy Disclosure | 2026 Edition</div>
+                            
+                            <div class="nl-section">
+                                <div class="nl-row"><span class="nl-bold">Data Collected</span> <span class="nl-bold">Retention</span></div>
+                                <div class="nl-row"><span>👤 Basic Profile (Name, Email)</span> <span>Until Deleted</span></div>
+                                <div class="nl-row"><span>📚 Book Interest History</span> <span>90 Days</span></div>
+                                <div class="nl-row"><span>📍 General Location (Campus)</span> <span>Session Only</span></div>
+                            </div>
+
+                            <div class="nl-section">
+                                <div class="nl-row"><span class="nl-bold">Data Sharing</span> <span class="nl-bold">Status</span></div>
+                                <div class="nl-row"><span>🏢 Sold to Advertisers</span> <span class="val-no">❌ Never</span></div>
+                                <div class="nl-row"><span>🤝 Shared with Other Students</span> <span class="val-yes">✅ Yes</span></div>
+                                <div class="nl-row"><span>📦 Shipping Partners</span> <span class="val-yes">✅ Yes</span></div>
+                            </div>
+
+                            <div class="nl-section">
+                                <div class="nl-row"><span class="nl-bold">Your Rights</span></div>
+                                <div class="nl-row"><span>🗑️ Delete Account & All Data</span> <span class="val-yes">✅ Supported</span></div>
+                                <div class="nl-row"><span>📥 Download your info</span> <span class="val-yes">✅ Supported</span></div>
+                            </div>
+                        </div>
+
+                        <h2>Detailed Breakdown</h2>
+                        <h3>1. How we use your info</h3>
+                        <p>We use your <strong>Name and Email</strong> so other students can coordinate book swaps with you. We use your <strong>Course Interests</strong> to suggest books that match your schedule.</p>
+                        
+                        <h3>2. We don't track you</h3>
+                        <p>Unlike other sites, we don't track your behavior across other websites. When you leave FlyersBookExchange, we stop watching. We do not use "targeted ads."</p>
+
+                        <h3>3. Total Control</h3>
+                        <p>In your settings, you'll find a single button labeled <strong>"Delete My Footprint."</strong> Clicking this permanently wipes your account, messages, and swap history from our servers within 24 hours.</p>
+                    </div>
+                `;
+
+                // Calculate real text characters (stripping HTML tags and extra whitespace) for a more accurate count
+                const realTextLength = goodHtml.replace(/<[^>]*>?/gm, '').replace(/\s+/g, ' ').trim().length;
+                meta.innerText = `${realTextLength.toLocaleString()} characters | Estimated read time: 1 min`;
+                body.innerHTML = goodHtml;
+            }
+        }
+
+        function goToSurvey() {
+            if (currentVariant === 'jargon') {
+                // Redirect to the Long Policy Form
+                window.location.href = "https://forms.gle/rVNmnDm3ACHt1fY8A";
+            } else {
+                // Redirect to the Short Policy Form
+                window.location.href = "https://forms.gle/jvHKmMqy4y9936yb6";
+            }
+        }
+
+        function setRate(id, val, btn) {
+            surveyAnswers[id] = val;
+            const parent = btn.parentElement;
+            Array.from(parent.children).forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            // Enable submit if all answered
+            if (Object.keys(surveyAnswers).length === 4) {
+                const submitBtn = document.getElementById('submit-btn');
+                submitBtn.disabled = false;
+                submitBtn.style.opacity = '1';
+                submitBtn.style.cursor = 'pointer';
+            }
+        }
+
+        function finish() {
+            console.log('--- RESEARCH DATA LOGGED ---');
+            console.log('Variant Shown:', currentVariant);
+            console.log('Answers:', surveyAnswers);
+            console.log('Timestamp:', new Date().toISOString());
+            console.log('---------------------------');
+            showScreen('thanks-screen');
+        }
+    </script>
+</body>
+</html>
